@@ -1,0 +1,10 @@
+[
+  {
+    "id": "F001",
+    "name": "claw-cli-quality",
+    "description": "Complete test suite: unit tests, DBB scenarios, E2E integration. All must pass with evidence before shipping.",
+    "status": "in-progress",
+    "passes": false,
+    "created": "2026-03-17"
+  }
+]

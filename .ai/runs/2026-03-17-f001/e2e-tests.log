@@ -1,0 +1,12 @@
+﹣ E2E: one-shot (0.18175ms) # No API key set
+﹣ E2E: pipe mode (0.029291ms) # No API key set
+﹣ E2E: JSON mode (0.023292ms) # No API key set
+﹣ E2E: no-stream mode (0.025667ms) # No API key set
+ℹ tests 0
+ℹ suites 4
+ℹ pass 0
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 38.228

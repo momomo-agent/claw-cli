@@ -1,0 +1,20 @@
+{
+  "name": "claw-cli",
+  "version": "0.1.0",
+  "description": "AI agent CLI — powered by agentic-claw",
+  "bin": {
+    "claw": "bin/claw.js"
+  },
+  "files": ["bin/claw.js", "README.md"],
+  "keywords": ["ai", "agent", "cli", "claw", "llm", "chat"],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/momomo-agent/claw-cli.git"
+  },
+  "dependencies": {
+    "agentic-claw": "file:../agentic-claw",
+    "agentic-core": "file:../agentic-core",
+    "agentic-memory": "file:../agentic-memory"
+  }
+}

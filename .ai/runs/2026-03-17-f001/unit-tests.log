@@ -1,0 +1,30 @@
+[31mError:[0m No API key. Run: [1mclaw --config[0m or set AGENTIC_API_KEY
+[31mError:[0m No API key. Run: [1mclaw --config[0m or set AGENTIC_API_KEY
+[31mError:[0m No API key. Run: [1mclaw --config[0m or set AGENTIC_API_KEY
+▶ CLI --help
+  ✔ shows usage information (29.769708ms)
+✔ CLI --help (30.07525ms)
+▶ CLI --version
+  ✔ shows version number (27.3725ms)
+✔ CLI --version (27.440459ms)
+▶ CLI no API key error
+  ✔ shows helpful error when no API key (30.993792ms)
+✔ CLI no API key error (31.068958ms)
+▶ CLI formatMarkdown
+  ✔ help output is readable (no raw escape codes leaking) (27.906375ms)
+✔ CLI formatMarkdown (27.966292ms)
+▶ CLI config management
+  ✔ --config creates config file (29.341042ms)
+✔ CLI config management (29.580041ms)
+▶ CLI arg parsing edge cases
+  ✔ handles empty args (no crash) (30.655ms)
+  ✔ handles unknown flags gracefully (29.741709ms)
+✔ CLI arg parsing edge cases (60.487375ms)
+ℹ tests 7
+ℹ suites 6
+ℹ pass 7
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 245.600459
