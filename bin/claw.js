@@ -197,6 +197,12 @@ async function main() {
 
   const { createClaw } = require('agentic-claw')
 
+  // Suppress library debug logs in JSON mode — redirect all console.log to stderr
+  const _origLog = console.log
+  if (flags.json) {
+    console.log = (...args) => console.error(...args)
+  }
+
   // Resolve config
   const config = loadConfig()
   const apiKey = flags.apiKey || config.apiKey || process.env.AGENTIC_API_KEY || process.env.ANTHROPIC_API_KEY || process.env.OPENAI_API_KEY
@@ -311,7 +317,7 @@ async function main() {
     })
 
     if (flags.json) {
-      console.log(JSON.stringify({
+      _origLog(JSON.stringify({
         answer: result.answer,
         rounds: result.rounds,
         data: result.data,

@@ -1,0 +1,59 @@
+[31mError:[0m No API key. Run: [1mclaw --config[0m or set AGENTIC_API_KEY
+[31mError:[0m No API key. Run: [1mclaw --config[0m or set AGENTIC_API_KEY
+[31mError:[0m No API key. Run: [1mclaw --config[0m or set AGENTIC_API_KEY
+▶ CLI --help
+  ✔ shows usage information (32.5625ms)
+✔ CLI --help (32.9045ms)
+▶ CLI --version
+  ✔ shows version number (32.503875ms)
+✔ CLI --version (32.569125ms)
+▶ CLI no API key error
+  ✔ shows helpful error when no API key (32.871ms)
+✔ CLI no API key error (32.950791ms)
+▶ CLI formatMarkdown
+  ✔ help output is readable (no raw escape codes leaking) (31.00725ms)
+✔ CLI formatMarkdown (31.078708ms)
+▶ CLI config management
+  ✔ --config creates config file (31.48425ms)
+✔ CLI config management (32.058583ms)
+▶ CLI arg parsing edge cases
+  ✔ handles empty args (no crash) (32.433125ms)
+  ✔ handles unknown flags gracefully (31.931ms)
+✔ CLI arg parsing edge cases (64.472084ms)
+
+[2mRound 1/200[0m
+[2mRound 1/200[0m[agenticAsk] Starting with prompt: Reply with exactly: hello
+[agenticAsk] Tools available: [] Stream: false
+[agenticAsk] Provider: anthropic
+
+[Round 1] Calling LLM...
+[Round 1] LLM Response:
+  - stop_reason: end_turn
+  - content: hello...
+  - tool_calls: 0
+[Round 1] Done: stop_reason=end_turn, tool_calls=0
+
+[agenticAsk] Loop ended at round 1
+[agenticAsk] Complete. Total rounds: 1
+
+▶ E2E: one-shot
+  ✔ gets response from LLM (3047.252875ms)
+✔ E2E: one-shot (3047.591542ms)
+▶ E2E: pipe mode
+  ✔ processes stdin (1781.216709ms)
+✔ E2E: pipe mode (1781.292583ms)
+▶ E2E: JSON output
+  ✔ outputs valid JSON with answer field (2025.631166ms)
+✔ E2E: JSON output (2025.739583ms)
+▶ E2E: streaming mode
+  ✔ gets response with streaming (2313.910167ms)
+✔ E2E: streaming mode (2314.011708ms)
+[2mRound 1/200[0m
+ℹ tests 11
+ℹ suites 10
+ℹ pass 11
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 9210.912167

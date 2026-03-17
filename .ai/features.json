@@ -3,8 +3,10 @@
     "id": "F001",
     "name": "claw-cli-quality",
     "description": "Complete test suite: unit tests, DBB scenarios, E2E integration. All must pass with evidence before shipping.",
-    "status": "in-progress",
-    "passes": false,
-    "created": "2026-03-17"
+    "status": "done",
+    "passes": true,
+    "created": "2026-03-17",
+    "completed": "2026-03-17",
+    "evidence": ".ai/runs/2026-03-17-f001/evidence.md"
   }
 ]
