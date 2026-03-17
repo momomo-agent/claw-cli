@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>claw-cli — AI agent in your terminal</title>
+  <meta name="description" content="Chat with AI from the command line. One-shot, REPL, pipe mode. Powered by agentic-claw.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⌨️</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,400;1,6..72,400&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #050505;
+      --surface: #0a0a0a;
+      --surface-2: #0f0f0f;
+      --border: #1c1c1c;
+      --text: #e4e4e7;
+      --text-2: #888;
+      --text-3: #555;
+      --accent: #22d3ee;
+      --accent-dim: #22d3ee12;
+      --green: #86efac;
+      --yellow: #f5c518;
+      --mono: 'DM Mono', 'SF Mono', monospace;
+      --serif: 'Newsreader', Georgia, serif;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--mono);
+      background: var(--bg);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+      font-size: 14px;
+    }
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      opacity: 0.02; pointer-events: none; z-index: 9999;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .wrap { max-width: 780px; margin: 0 auto; padding: 0 24px; }
+
+    /* Nav */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      padding: 14px 24px;
+      display: flex; align-items: center; justify-content: space-between;
+      background: rgba(5,5,5,0.88);
+      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    nav .logo { font-size: 14px; font-weight: 500; color: var(--text); display: flex; align-items: center; gap: 7px; }
+    nav .logo span { color: var(--accent); }
+    nav .links { display: flex; gap: 20px; font-size: 13px; }
+    nav .links a { color: var(--text-2); transition: color 0.15s; }
+    nav .links a:hover { color: var(--text); text-decoration: none; }
+
+    /* Hero */
+    .hero {
+      padding: 150px 0 80px;
+      text-align: center;
+      position: relative;
+    }
+    .hero::before {
+      content: ''; position: absolute;
+      top: 60px; left: 50%; transform: translateX(-50%);
+      width: 600px; height: 400px;
+      background: radial-gradient(circle, var(--accent-dim) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero .tagline {
+      font-family: var(--serif);
+      font-size: clamp(38px, 6vw, 60px);
+      line-height: 1.1;
+      font-weight: 400;
+      letter-spacing: -1px;
+      margin-bottom: 20px;
+    }
+    .hero .tagline em { font-style: italic; color: var(--accent); }
+    .hero .sub {
+      font-size: 14px; color: var(--text-2);
+      max-width: 480px; margin: 0 auto 36px;
+      line-height: 1.7;
+    }
+    .hero-actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+    .btn {
+      display: inline-flex; align-items: center; gap: 7px;
+      padding: 10px 22px; border-radius: 7px;
+      font-size: 13px; font-family: var(--mono); font-weight: 500;
+      transition: all 0.15s; cursor: pointer; border: 1px solid transparent;
+    }
+    .btn-primary { background: var(--accent); color: #000; border-color: var(--accent); }
+    .btn-primary:hover { opacity: 0.9; text-decoration: none; }
+    .btn-ghost { background: transparent; color: var(--text-2); border-color: var(--border); }
+    .btn-ghost:hover { border-color: var(--text-3); color: var(--text); text-decoration: none; }
+
+    .install {
+      margin: 36px auto 0; max-width: 380px;
+      background: var(--surface-2); border: 1px solid var(--border);
+      border-radius: 8px; padding: 12px 18px;
+      display: flex; align-items: center; justify-content: space-between;
+      font-size: 13px; cursor: pointer; transition: border-color 0.15s;
+    }
+    .install:hover { border-color: var(--text-3); }
+    .install code { color: var(--text-2); }
+    .install code b { color: var(--accent); font-weight: 500; }
+    .install .cp { color: var(--text-3); font-size: 11px; }
+
+    /* Terminal */
+    .demo { padding: 60px 0 80px; }
+    .demo h2 {
+      font-family: var(--serif); font-size: 30px; font-weight: 400;
+      letter-spacing: -0.5px; text-align: center; margin-bottom: 12px;
+    }
+    .demo .sub-h {
+      text-align: center; font-size: 13px; color: var(--text-3); margin-bottom: 32px;
+    }
+    .terminal {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 10px; overflow: hidden;
+    }
+    .terminal-header {
+      padding: 10px 16px; background: #111; display: flex; align-items: center; gap: 8px;
+    }
+    .terminal-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .terminal-dot.r { background: #ff5f57; }
+    .terminal-dot.y { background: #febc2e; }
+    .terminal-dot.g { background: #28c840; }
+    .terminal-title { font-size: 12px; color: var(--text-3); margin-left: 8px; }
+    .terminal-body {
+      padding: 20px 22px; font-size: 13px; line-height: 1.8;
+    }
+    .t-prompt { color: var(--accent); }
+    .t-cmd { color: var(--text); }
+    .t-out { color: var(--text-2); }
+    .t-dim { color: var(--text-3); }
+    .t-gap { display: block; height: 16px; }
+
+    /* Features */
+    .features { padding: 40px 0 80px; }
+    .features h2 {
+      font-family: var(--serif); font-size: 30px; font-weight: 400;
+      letter-spacing: -0.5px; text-align: center; margin-bottom: 40px;
+    }
+    .feat-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 1px; background: var(--border);
+      border: 1px solid var(--border); border-radius: 10px; overflow: hidden;
+    }
+    .feat {
+      background: var(--surface); padding: 28px 24px;
+    }
+    .feat h3 { font-size: 14px; font-weight: 500; margin-bottom: 6px; }
+    .feat p { font-size: 13px; color: var(--text-2); line-height: 1.6; }
+
+    /* Options table */
+    .options { padding: 40px 0 80px; }
+    .options h2 {
+      font-family: var(--serif); font-size: 30px; font-weight: 400;
+      letter-spacing: -0.5px; text-align: center; margin-bottom: 32px;
+    }
+    .opt-grid {
+      display: grid; grid-template-columns: auto 1fr;
+      gap: 1px; background: var(--border);
+      border: 1px solid var(--border); border-radius: 10px; overflow: hidden;
+    }
+    .opt {
+      background: var(--surface); padding: 14px 18px; font-size: 13px;
+    }
+    .opt.hd { background: #111; font-weight: 500; }
+    .opt code { color: var(--accent); }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 32px 0; text-align: center;
+      font-size: 12px; color: var(--text-3);
+    }
+
+    @media (max-width: 640px) {
+      .feat-grid { grid-template-columns: 1fr; }
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .fu { animation: fadeUp 0.5s ease-out both; }
+    .fu1 { animation-delay: 0.08s; } .fu2 { animation-delay: 0.16s; }
+    .fu3 { animation-delay: 0.24s; } .fu4 { animation-delay: 0.32s; }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="logo"><span>⌨️</span> claw-cli</div>
+  <div class="links">
+    <a href="#demo">Demo</a>
+    <a href="#features">Features</a>
+    <a href="#options">Options</a>
+    <a href="https://github.com/momomo-agent/claw-cli">GitHub</a>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section class="hero wrap">
+  <div class="tagline fu">AI agent in<br><em>your terminal</em></div>
+  <p class="sub fu fu1">
+    One-shot questions, interactive REPL, pipe mode.<br>
+    Powered by <a href="https://momomo-agent.github.io/agentic-claw/">agentic-claw</a>.
+  </p>
+  <div class="hero-actions fu fu2">
+    <a href="https://github.com/momomo-agent/claw-cli" class="btn btn-primary">GitHub</a>
+    <a href="#demo" class="btn btn-ghost">See Demo ↓</a>
+  </div>
+  <div class="install fu fu3" onclick="navigator.clipboard.writeText('npm i -g claw-cli');this.querySelector('.cp').textContent='Copied!'">
+    <code>$ <b>npm</b> i -g claw-cli</code>
+    <span class="cp">copy</span>
+  </div>
+</section>
+
+<!-- Demo -->
+<section class="demo wrap" id="demo">
+  <h2>Three modes, one command</h2>
+  <p class="sub-h">Ask a question, start a conversation, or pipe in a file.</p>
+
+  <div class="terminal">
+    <div class="terminal-header">
+      <div class="terminal-dot r"></div>
+      <div class="terminal-dot y"></div>
+      <div class="terminal-dot g"></div>
+      <span class="terminal-title">terminal</span>
+    </div>
+    <div class="terminal-body">
+<span class="t-dim"># One-shot</span>
+<span class="t-prompt">$</span> <span class="t-cmd">claw "What is quantum computing?"</span>
+<span class="t-out">Quantum computing uses qubits that can exist in superposition,</span>
+<span class="t-out">enabling parallel computation at a fundamentally different scale...</span>
+<span class="t-gap"></span>
+<span class="t-dim"># Interactive REPL</span>
+<span class="t-prompt">$</span> <span class="t-cmd">claw -i</span>
+<span class="t-dim">claw v0.1.0 — type /quit to exit</span>
+<span class="t-gap"></span>
+<span class="t-prompt">&gt;</span> <span class="t-cmd">Tell me about qubits</span>
+<span class="t-out">Qubits are the fundamental unit of quantum information...</span>
+<span class="t-gap"></span>
+<span class="t-prompt">&gt;</span> <span class="t-cmd">What did I just ask?</span>
+<span class="t-out">You asked about qubits — I remember our conversation.</span>
+<span class="t-gap"></span>
+<span class="t-dim"># Pipe mode</span>
+<span class="t-prompt">$</span> <span class="t-cmd">cat report.md | claw "summarize in 3 bullets"</span>
+<span class="t-out">• Revenue grew 23% year-over-year</span>
+<span class="t-out">• Cloud division became the largest segment</span>
+<span class="t-out">• Guidance raised for Q3</span>
+<span class="t-gap"></span>
+<span class="t-dim"># JSON output</span>
+<span class="t-prompt">$</span> <span class="t-cmd">claw --json "Hello"</span>
+<span class="t-out">{ "answer": "Hello! How can I help?", "rounds": 1 }</span>
+    </div>
+  </div>
+</section>
+
+<!-- Features -->
+<section class="features wrap" id="features">
+  <h2>What you get</h2>
+  <div class="feat-grid">
+    <div class="feat">
+      <h3>💬 One-shot</h3>
+      <p>Ask a question, get an answer, done. Scripts and automation friendly.</p>
+    </div>
+    <div class="feat">
+      <h3>🔄 Interactive REPL</h3>
+      <p>Multi-turn conversations with memory. Context preserved across turns.</p>
+    </div>
+    <div class="feat">
+      <h3>📄 Pipe mode</h3>
+      <p>Pipe files and stdin. Combine with other CLI tools. Unix philosophy.</p>
+    </div>
+    <div class="feat">
+      <h3>🌊 Streaming</h3>
+      <p>Tokens arrive as they're generated. No waiting for the full response.</p>
+    </div>
+    <div class="feat">
+      <h3>📋 JSON output</h3>
+      <p>Clean JSON on stdout for scripting. Debug logs go to stderr.</p>
+    </div>
+    <div class="feat">
+      <h3>🔧 Any provider</h3>
+      <p>Anthropic, OpenAI, or any compatible API. Custom base URL and proxy.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Options -->
+<section class="options wrap" id="options">
+  <h2>Options</h2>
+  <div class="opt-grid">
+    <div class="opt hd">Flag</div>
+    <div class="opt hd">Description</div>
+
+    <div class="opt"><code>-i, --interactive</code></div>
+    <div class="opt">Interactive REPL mode</div>
+
+    <div class="opt"><code>--config</code></div>
+    <div class="opt">Configure API key + provider</div>
+
+    <div class="opt"><code>--provider &lt;name&gt;</code></div>
+    <div class="opt">LLM provider (anthropic / openai)</div>
+
+    <div class="opt"><code>--model &lt;name&gt;</code></div>
+    <div class="opt">Model name</div>
+
+    <div class="opt"><code>--api-key &lt;key&gt;</code></div>
+    <div class="opt">API key (or set AGENTIC_API_KEY)</div>
+
+    <div class="opt"><code>--base-url &lt;url&gt;</code></div>
+    <div class="opt">Custom API base URL</div>
+
+    <div class="opt"><code>--proxy &lt;url&gt;</code></div>
+    <div class="opt">Proxy URL</div>
+
+    <div class="opt"><code>--system &lt;prompt&gt;</code></div>
+    <div class="opt">System prompt</div>
+
+    <div class="opt"><code>--json</code></div>
+    <div class="opt">JSON output (clean stdout)</div>
+
+    <div class="opt"><code>--no-stream</code></div>
+    <div class="opt">Disable streaming</div>
+
+    <div class="opt"><code>--version</code></div>
+    <div class="opt">Show version</div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    MIT · <a href="https://github.com/momomo-agent/claw-cli">GitHub</a> ·
+    Powered by <a href="https://momomo-agent.github.io/agentic-claw/">agentic-claw</a> ·
+    Part of <a href="https://momomo-agent.github.io/agentic/">agentic</a>
+  </div>
+</footer>
+
+</body>
+</html>
