@@ -135,12 +135,14 @@
     .terminal-title { font-size: 12px; color: var(--text-3); margin-left: 8px; }
     .terminal-body {
       padding: 20px 22px; font-size: 13px; line-height: 1.8;
+      white-space: pre-wrap; word-break: break-word;
     }
     .t-prompt { color: var(--accent); }
-    .t-cmd { color: var(--text); }
-    .t-out { color: var(--text-2); }
-    .t-dim { color: var(--text-3); }
-    .t-gap { display: block; height: 16px; }
+    .t-cmd { color: var(--text); font-weight: 500; }
+    .t-line { display: block; }
+    .t-out { color: var(--text-2); display: block; padding-left: 16px; }
+    .t-dim { color: var(--text-3); display: block; }
+    .t-gap { display: block; height: 12px; }
 
     /* Features */
     .features { padding: 40px 0 80px; }
@@ -237,32 +239,30 @@
       <div class="terminal-dot g"></div>
       <span class="terminal-title">terminal</span>
     </div>
-    <div class="terminal-body">
-<span class="t-dim"># One-shot</span>
-<span class="t-prompt">$</span> <span class="t-cmd">claw "What is quantum computing?"</span>
-<span class="t-out">Quantum computing uses qubits that can exist in superposition,</span>
-<span class="t-out">enabling parallel computation at a fundamentally different scale...</span>
+    <div class="terminal-body"><span class="t-dim"># One-shot</span>
+<span class="t-line"><span class="t-prompt">$</span> <span class="t-cmd">claw "What is quantum computing?"</span></span>
+<span class="t-out">Quantum computing uses qubits that can exist in</span>
+<span class="t-out">superposition, enabling parallel computation...</span>
 <span class="t-gap"></span>
 <span class="t-dim"># Interactive REPL</span>
-<span class="t-prompt">$</span> <span class="t-cmd">claw -i</span>
-<span class="t-dim">claw v0.1.0 — type /quit to exit</span>
+<span class="t-line"><span class="t-prompt">$</span> <span class="t-cmd">claw -i</span></span>
+<span class="t-out">claw v0.1.0 — type /quit to exit</span>
 <span class="t-gap"></span>
-<span class="t-prompt">&gt;</span> <span class="t-cmd">Tell me about qubits</span>
-<span class="t-out">Qubits are the fundamental unit of quantum information...</span>
+<span class="t-line"><span class="t-prompt">&gt;</span> <span class="t-cmd">Tell me about qubits</span></span>
+<span class="t-out">Qubits are the fundamental unit of quantum info...</span>
 <span class="t-gap"></span>
-<span class="t-prompt">&gt;</span> <span class="t-cmd">What did I just ask?</span>
+<span class="t-line"><span class="t-prompt">&gt;</span> <span class="t-cmd">What did I just ask?</span></span>
 <span class="t-out">You asked about qubits — I remember our conversation.</span>
 <span class="t-gap"></span>
 <span class="t-dim"># Pipe mode</span>
-<span class="t-prompt">$</span> <span class="t-cmd">cat report.md | claw "summarize in 3 bullets"</span>
+<span class="t-line"><span class="t-prompt">$</span> <span class="t-cmd">cat report.md | claw "summarize"</span></span>
 <span class="t-out">• Revenue grew 23% year-over-year</span>
 <span class="t-out">• Cloud division became the largest segment</span>
 <span class="t-out">• Guidance raised for Q3</span>
 <span class="t-gap"></span>
 <span class="t-dim"># JSON output</span>
-<span class="t-prompt">$</span> <span class="t-cmd">claw --json "Hello"</span>
-<span class="t-out">{ "answer": "Hello! How can I help?", "rounds": 1 }</span>
-    </div>
+<span class="t-line"><span class="t-prompt">$</span> <span class="t-cmd">claw --json "Hello"</span></span>
+<span class="t-out">{ "answer": "Hello!", "rounds": 1 }</span></div>
   </div>
 </section>
 
