@@ -197,11 +197,10 @@ async function main() {
 
   const { createClaw } = require('agentic-claw')
 
-  // Suppress library debug logs in JSON mode — redirect all console.log to stderr
+  // Suppress library debug logs — redirect all console.log to stderr
+  // so only the final answer goes to stdout
   const _origLog = console.log
-  if (flags.json) {
-    console.log = (...args) => console.error(...args)
-  }
+  console.log = (...args) => console.error(...args)
 
   // Resolve config
   const config = loadConfig()
@@ -323,8 +322,8 @@ async function main() {
         data: result.data,
       }, null, 2))
     } else if (!fullAnswer && result.answer) {
-      // Non-streaming: format and print
-      console.log(formatMarkdown(result.answer))
+      // Non-streaming: format and print to stdout
+      _origLog(formatMarkdown(result.answer))
     } else {
       process.stdout.write('\n')
     }
