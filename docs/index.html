@@ -134,15 +134,16 @@
     .terminal-dot.g { background: #28c840; }
     .terminal-title { font-size: 12px; color: var(--text-3); margin-left: 8px; }
     .terminal-body {
-      padding: 16px 20px; font-size: 13px; line-height: 1.5;
+      padding: 16px 20px; font-size: 13px; line-height: 1.6;
       white-space: pre-wrap; word-break: break-word;
     }
     .t-prompt { color: var(--accent); }
     .t-cmd { color: var(--text); font-weight: 500; }
     .t-line { display: block; }
     .t-out { color: var(--text-2); display: block; padding-left: 16px; }
-    .t-dim { color: var(--text-3); display: block; }
-    .t-gap { display: block; height: 6px; }
+    .t-dim { color: var(--text-3); display: block; margin-top: 10px; }
+    .t-dim:first-child { margin-top: 0; }
+    .t-gap { display: none; }
 
     /* Features */
     .features { padding: 40px 0 80px; }
