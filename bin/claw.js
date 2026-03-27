@@ -161,11 +161,11 @@ async function main() {
   try {
     // Try local paths first (development), then npm packages
     const corePaths = [
-      path.join(__dirname, '..', '..', 'agentic-core', 'docs', 'agentic-agent.js'),
+      path.join(__dirname, '..', '..', 'agentic-core', 'agentic-core.js'),
       'agentic-core',
     ]
     const memoryPaths = [
-      path.join(__dirname, '..', '..', 'agentic-memory', 'memory.js'),
+      path.join(__dirname, '..', '..', 'agentic-memory', 'agentic-memory.js'),
       'agentic-memory',
     ]
 
