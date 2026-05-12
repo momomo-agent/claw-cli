@@ -113,6 +113,13 @@ ${BOLD}Options:${RESET}
   --no-stream          Disable streaming
   -h, --help           Show this help
   -v, --version        Show version
+
+${BOLD}REPL commands${RESET} ${DIM}(interactive mode)${RESET}:
+  /info                Show memory + active model/provider
+  /model <name>        Switch model on the fly (/model default to reset)
+  /provider <name>     Switch provider on the fly
+  /clear               Clear conversation memory
+  /quit                Exit
 `)
 }
 
@@ -234,7 +241,7 @@ async function main() {
 
   // Interactive REPL
   if (flags.interactive || (!positional.length && !stdinContent)) {
-    console.log(`\n${BOLD}claw${RESET} ${DIM}v0.1.0${RESET} — type ${YELLOW}/quit${RESET} to exit\n`)
+    console.log(`\n${BOLD}claw${RESET} ${DIM}v0.1.0${RESET} — ${DIM}/info /model /provider /clear /quit${RESET}\n`)
 
     const rl = readline.createInterface({
       input: process.stdin,
@@ -261,7 +268,39 @@ async function main() {
       }
       if (input === '/info') {
         const info = claw.memory.info()
+        const c = typeof claw.getConfig === 'function' ? claw.getConfig() : {}
         console.log(`${DIM}turns: ${info.turns} | messages: ${info.messageCount} | tokens: ${info.tokens}/${info.maxTokens}${RESET}`)
+        console.log(`${DIM}model: ${c.model || '(default)'} | provider: ${c.provider || '(default)'} | baseUrl: ${c.baseUrl || '(default)'}${RESET}`)
+        rl.prompt()
+        return
+      }
+      if (input.startsWith('/model')) {
+        const next = input.slice('/model'.length).trim()
+        if (!next) {
+          const c = typeof claw.getConfig === 'function' ? claw.getConfig() : {}
+          console.log(`${DIM}current model: ${c.model || '(default)'}${RESET}`)
+        } else if (typeof claw.setModel === 'function') {
+          claw.setModel(next === 'default' || next === 'reset' ? null : next)
+          const c = claw.getConfig()
+          console.log(`${DIM}model -> ${c.model || '(default)'}${RESET}`)
+        } else {
+          console.log(`${RED}agentic-claw in use is too old; rebuild dist to pick up setModel${RESET}`)
+        }
+        rl.prompt()
+        return
+      }
+      if (input.startsWith('/provider')) {
+        const next = input.slice('/provider'.length).trim()
+        if (!next) {
+          const c = typeof claw.getConfig === 'function' ? claw.getConfig() : {}
+          console.log(`${DIM}current provider: ${c.provider || '(default)'} | baseUrl: ${c.baseUrl || '(default)'}${RESET}`)
+        } else if (typeof claw.setProvider === 'function') {
+          claw.setProvider(next)
+          const c = claw.getConfig()
+          console.log(`${DIM}provider -> ${c.provider}${RESET}`)
+        } else {
+          console.log(`${RED}agentic-claw in use is too old; rebuild dist to pick up setProvider${RESET}`)
+        }
         rl.prompt()
         return
       }
